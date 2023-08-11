@@ -15,7 +15,6 @@ public:
 class binomial_heap{
     Node* root;
     Node* min_node;
-public:
     int getDegree(Node* h)
     {
         if(h == nullptr)
@@ -64,6 +63,17 @@ public:
         }
         h.root = nullptr;
     }
+    vector<int> ncrvec(int n)
+    {
+        vector<int> vec;
+        vec.push_back(1);
+        for(int i=1; i<=n; i++)
+        {
+            vec.push_back((vec[i-1]*(n-i+1))/i);
+        }
+        return vec;
+    }
+public:
     binomial_heap(){
         min_node = root = nullptr;
     }
@@ -109,7 +119,6 @@ public:
                 break;
         }
 
-        //updating min_node
         calcMin();
     }
 
@@ -171,16 +180,7 @@ public:
         Union(temp);
         return retval;
     }
-    vector<int> ncrvec(int n)
-    {
-        vector<int> vec;
-        vec.push_back(1);
-        for(int i=1; i<=n; i++)
-        {
-            vec.push_back((vec[i-1]*(n-i+1))/i);
-        }
-        return vec;
-    }
+
     void Print()
     {
         cout<<"Printing Binomial Heap... \n";
@@ -227,28 +227,3 @@ public:
         }
     }
 };
-
-int main()
-{
-    binomial_heap h1, h2;
-    h1.Insert(5);
-    cout<<h1.FindMin()<<endl; //5
-    h1.Insert(2);
-    cout<<h1.FindMin()<<endl; //2
-    h1.Insert(10);
-    cout<<h1.FindMin()<<endl;
-    h1.Print();//2
-    h1.Insert(15);
-    h1.Print();
-    h1.Insert(9);
-    h1.Print();
-    h1.Insert(1);
-    h1.Print();
-    cout<<"Find-Min returned "<<h1.FindMin()<<endl; //1
-    cout<<"Extract-Min returned "<<h1.ExtractMin()<<endl; //1
-    h1.Print();
-    cout<<h1.FindMin()<<endl; //2
-    cout<<h1.ExtractMin()<<endl; //2
-    cout<<h1.FindMin()<<endl; //5
-    return 0;
-}
