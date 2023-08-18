@@ -320,6 +320,13 @@ void Find(const string& key)
 
 void print_report(ll n, ll N)
 {
+    ll digit=0;
+    ll temp = n;
+    while(temp>0)
+    {
+        temp/=10;
+        digit++;
+    }
     ld h1SCP = (h1SCProbe*1.0)/N;
     ld h2SCP = (h2SCProbe*1.0)/N;
     ld h1DHP = (h1DHProbe*1.0)/N;
@@ -332,9 +339,12 @@ void print_report(ll n, ll N)
     cout<<"|        |  Method              |        # of       |  Average  |        # of       |  Average  |\n";
     cout<<"|        |                      |     Collisions    |  Probe    |     Collisions    |  Probe    |\n";
     cout<<"-------------------------------------------------------------------------------------------------\n";
-    cout<<"|        |  Chaining            |\t"<<h1ChainCollision<<"\t\t"<<h1SCP<<"\t \t"<<h2ChainCollision<<"\t\t"<<h2SCP<<"\t|\n";
-    cout<<"|"<<"  "<<n<<" |  Double Hashing      |\t"<<h1DHCollision<<"\t\t"<<h1DHP<<"\t \t"<<h2DHCollision<<"\t\t"<<h2DHP<<"\t|\n";
-    cout<<"|        |  Custom Probing      |\t"<<h1CPCollision<<"\t\t"<<h1CPP<<"\t \t"<<h2CPCollision<<"\t\t"<<h2CPP<<"\t|\n";
+    cout<<"|        |  Chaining            |\t\t"<<h1ChainCollision<<"\t\t\t"<<h1SCP<<"\t \t\t"<<h2ChainCollision<<"\t\t\t"<<h2SCP<<"\t|\n";
+    cout<<"|"<<" "<<n;
+    for(ll i=0; i<7-digit; i++)
+        cout<<" ";
+    cout<<"|  Double Hashing      |\t\t"<<h1DHCollision<<"\t\t\t"<<h1DHP<<"\t\t\t"<<h2DHCollision<<"\t\t\t"<<h2DHP<<"\t|\n";
+    cout<<"|        |  Custom Probing      |\t\t"<<h1CPCollision<<"\t\t\t"<<h1CPP<<"\t \t\t"<<h2CPCollision<<"\t\t\t"<<h2CPP<<"\t|\n";
     cout<<"-------------------------------------------------------------------------------------------------\n\n\n";
 }
 
@@ -345,7 +355,7 @@ int main()
    cin>>size>>numOfPairs;
     n = getNextPrime(size);
     Init(n);
-//    freopen("report.txt", "w", stdout);
+   freopen("report.txt", "a", stdout);
     ll v=0, temp=0;
     vector<string> generatedStrings;
     for(ll i=0; i<numOfPairs; i++){
@@ -368,7 +378,7 @@ int main()
     ld h2DHP = (h2DHProbe*1.0)/N;
     ld h1CPP = (h1CPProbe*1.0)/N;
     ld h2CPP = (h2CPProbe*1.0)/N;
-    cout<<"For N' = "<<size<<endl;
+    cout<<"For N' = "<<size<<endl<<endl;
     print_report(n, N);
     return 0;
 }
