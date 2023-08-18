@@ -105,12 +105,6 @@ int main()
         Find(generatedStrings[index]);
     }
     ll N = numOfPairs/10;
-    ld h1SCP = (h1SCProbe*1.0)/N;
-    ld h2SCP = (h2SCProbe*1.0)/N;
-    ld h1DHP = (h1DHProbe*1.0)/N;
-    ld h2DHP = (h2DHProbe*1.0)/N;
-    ld h1CPP = (h1CPProbe*1.0)/N;
-    ld h2CPP = (h2CPProbe*1.0)/N;
     cout<<"For N' = "<<size<<endl<<endl;
     print_report(n, N);
     return 0;
