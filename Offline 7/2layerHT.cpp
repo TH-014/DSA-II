@@ -271,4 +271,9 @@ I USA Ny 4000
 I USA wdc 4500 
 I Ind Kolkata 50
 I Ind Delhi 55
+F1 USA Ny
+F1 USA London
+F2 BD
+F2 Canada
+E
 */
