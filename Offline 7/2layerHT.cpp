@@ -4,8 +4,6 @@ using namespace std;
 typedef long long ll;
 typedef long double ld;
 enum crMethod{separate_chain, double_hashing, custom_probing};
-enum status{blank, occupied, deleted};
-const ll c1 = 29, c2 = 37;
 
 class kvPair{
 public:
@@ -39,8 +37,6 @@ ll hash1(const string &s, ll m){
     return hashValue;
 }
 
-// Jenkins "one_at_a_time" Hash Function
-// https://en.wikipedia.org/wiki/Jenkins_hash_function
 ll hash2(const string& s, ll m) {
     ll hashValue = 0;
     ll n = s.size();
@@ -57,22 +53,6 @@ ll hash2(const string& s, ll m) {
     if(hashValue < 0)
         hashValue = -hashValue;
     hashValue %= m;
-    return hashValue;
-}
-
-//Auxiliary Hash Function for double hashing and custom probing
-ll auxHash(const string& s, ll m) {
-    ll p = 10000007;
-    ll hashValue = 0;
-    ll pPow = 1;
-    for(char c : s){
-        hashValue = (hashValue + (c - 'a' + 1) * pPow) % m;
-        pPow = (pPow * p) % m;
-    }
-    if(hashValue < 0)
-        hashValue += m;
-    else if(hashValue == 0)
-        hashValue=1;
     return hashValue;
 }
 
@@ -93,17 +73,7 @@ ll getNextPrime(ll n){
     }
 }
 
-//generate random string
-string getRandomString(){
-    ll len = rand()%6 + 5;
-    string s;
-    for(ll i=0; i<len; i++){
-        s += (char)('a' + rand()%26);
-    }
-    return s;
-}
-
-//Hash Table class
+//2nd Layer Hash Table class
 class HashTable{
 public:
     crMethod method;
@@ -155,6 +125,7 @@ public:
     }
 };
 
+//1st Layer Hash Table class
 class HashTable1{
     vector<list<HashTable>> layer1ht;
     ll n;
