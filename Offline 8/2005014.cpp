@@ -42,7 +42,7 @@ Graph Create_Random_Graph(int v)
     {
         for(int j=i+2; j<v; j++)
         {
-            int minw = max(50, (max(g.adj[i][j-1], g.adj[j][j-1])-min(g.adj[i][j-1], g.adj[j][j-1])));
+            int minw = max(50, abs(g.adj[i][j-1]-g.adj[j][j-1]));
             int maxw = min(200, (g.adj[i][j-1]+g.adj[j][j-1]));
             int w = rand()%(maxw-minw+1) + minw;
             g.addEdge(i, j, w);
@@ -97,11 +97,11 @@ int Metric_Approximation_TSP(Graph g)
     return Calculate_Tour_Length(cycle, g);
 }
 
-int turnOn(int mask, int pos) {
+int setBit(int mask, int pos) {
     return mask | (1<<pos);
 }
 
-bool isOn(int mask ,int pos) {
+bool isSet(int mask ,int pos) {
     return (mask & (1<<pos));
 }
 
@@ -114,9 +114,9 @@ int bitmask_dp(vector<vector<int> > &adj, vector<vector<int> > &dp, int n, int i
     int ans = 1e8;
     for (int j = 0; j<n; j++)
     {
-        if (!isOn(mask,j))
+        if (!isSet(mask,j))
         {
-            int result = bitmask_dp(adj, dp, n, j, turnOn(mask, j)) + adj[i][j];
+            int result = bitmask_dp(adj, dp, n, j, setBit(mask, j)) + adj[i][j];
             ans = min(ans, result);
         }
     }
@@ -128,12 +128,7 @@ int Exact_TSP(Graph g)
 {
     int n = g.V;
     vector<vector<int> > dp(n, vector<int> ((1<<n),-1));
-    int mincost = 1e8;
-    for(int i=1; i<n; i++)
-    {
-        int cost = bitmask_dp(g.adj, dp, n, i, turnOn(1,i));
-        mincost = min(mincost, cost);
-    }
+    int mincost = bitmask_dp(g.adj, dp, n, 0, 1);
     return mincost;
 }
 
@@ -156,7 +151,7 @@ int main()
         // }
         exact = Exact_TSP(g);
         approx = Metric_Approximation_TSP(g);
-        //cout<<"Testcase "<<i+1<<": "<<exact<<" "<<approx<<"\n";
+        cout<<"Testcase "<<i+1<<": "<<exact<<" "<<approx<<"\n";
         ratio = (long double)approx/exact;
         cout<<"( "<<i+1<<", "<<ratio<<" )"<<endl;
     }
