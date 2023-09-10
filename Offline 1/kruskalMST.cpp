@@ -16,7 +16,7 @@ public:
 bool compEdge(Edge e1, Edge e2)
 {
     if(e1.weight==e2.weight)
-            return e1.ver1<e2.ver1;
+        return e1.ver1<e2.ver1;
     return e1.weight<e2.weight;
 }
 
