@@ -1,55 +1,6 @@
 #include<bits/stdc++.h>
+#include "kruskal.h"
 using namespace std;
-
-class Edge{
-public:
-    int ver1, ver2;
-    int weight;
-    Edge(int u, int v, int w)
-    {
-        ver1 = min(u,v);
-        ver2 = max(u,v);
-        weight = w;
-    }
-};
-
-bool compEdge(Edge e1, Edge e2)
-{
-    if(e1.weight==e2.weight)
-        return e1.ver1<e2.ver1;
-    return e1.weight<e2.weight;
-}
-
-class DSU{
-int N;
-int *parent;
-public:
-    DSU(int n)
-    {
-        N = n;
-        parent = new int[n];
-        for(int i=0; i<n; i++)
-            parent[i] = i;
-    }
-    int find_parent(int u)
-    {
-        if(parent[u]==u)
-            return u;
-        parent[u] = find_parent(parent[u]);
-        return parent[u];
-    }
-    void Union(int u, int v)
-    {
-        int pu = find_parent(u);
-        int pv = find_parent(v);
-        if(pu!=pv)
-            parent[pv] = pu;
-    }
-    ~DSU()
-    {
-        delete [] parent;
-    }
-};
 
 class Graph{
 public:
@@ -78,25 +29,6 @@ public:
         }
     }
 };
-
-
-vector<Edge> kruskal(int n, vector<Edge> edges)
-{
-    vector<Edge> mst;
-    DSU dsu(n);
-    sort(edges.begin(), edges.end(), compEdge);
-    for(int i=0; i<edges.size(); i++)
-    {
-        int p1 = dsu.find_parent(edges[i].ver1);
-        int p2 = dsu.find_parent(edges[i].ver2);
-        if(p1!=p2)
-        {
-            mst.push_back(edges[i]);
-            dsu.Union(edges[i].ver1, edges[i].ver2);
-        }
-    }
-    return mst;
-}
 
 Graph Create_Random_Graph(int v)
 {
@@ -158,13 +90,6 @@ int Metric_Approximation_TSP(Graph g)
     vector<Edge> mst_edges = kruskal(g.V, g.edges);
     Graph mst(g.V);
     mst.make_graph(mst_edges);
-    // for(int j=0; j<mst.V; j++)
-    // {
-    //     for(int k=0; k<mst.V; k++)
-    //         cout<<mst.adj[j][k]<<" ";
-    //     cout<<endl;
-    // }
-    // cout<<endl;
     vector<int> cycle = dfs(mst);
     // for(int i=0; i<cycle.size(); i++)
     //    cout<<cycle[i]<<" ";
