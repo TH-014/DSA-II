@@ -85,7 +85,7 @@ vector<int> dfs(Graph &mst)
     return cycle;
 }
 
-int Metric_Approximation_TSP(Graph g)
+vector<int> Metric_Approximation_TSP(Graph g)
 {
     vector<Edge> mst_edges = kruskal(g.V, g.edges);
     Graph mst(g.V);
@@ -94,7 +94,7 @@ int Metric_Approximation_TSP(Graph g)
     // for(int i=0; i<cycle.size(); i++)
     //    cout<<cycle[i]<<" ";
     // cout<<endl;
-    return Calculate_Tour_Length(cycle, g);
+    return cycle;
 }
 
 int setBit(int mask, int pos) {
@@ -105,31 +105,52 @@ bool isSet(int mask ,int pos) {
     return (mask & (1<<pos));
 }
 
-int bitmask_dp(vector<vector<int> > &adj, vector<vector<int> > &dp, int n, int i, int mask) 
+int bitmask_dp(vector<vector<int> > &adj, vector<vector<int> > &dp, vector<vector<int> > &child, int n, int i, int mask) 
 {
     if(mask == (1<<n) - 1)
+    {
+        child[i][mask] = 0;
         return adj[i][0];
+    }
     if(dp[i][mask] != -1)
+    {
         return dp[i][mask];
+    }
     int ans = 1e8;
     for (int j = 0; j<n; j++)
     {
         if (!isSet(mask,j))
         {
-            int result = bitmask_dp(adj, dp, n, j, setBit(mask, j)) + adj[i][j];
-            ans = min(ans, result);
+            int result = bitmask_dp(adj, dp, child, n, j, setBit(mask, j)) + adj[i][j];
+            if(result < ans)
+            {
+                ans = result;
+                child[i][mask] = j;
+            }
         }
     }
     dp[i][mask] = ans;
     return dp[i][mask];
 }
 
-int Exact_TSP(Graph g)
+vector<int> Exact_TSP(Graph g)
 {
     int n = g.V;
     vector<vector<int> > dp(n, vector<int> ((1<<n),-1));
-    int mincost = bitmask_dp(g.adj, dp, n, 0, 1);
-    return mincost;
+    vector<vector<int> > child(n, vector<int> ((1<<n),-1));
+    int mincost = bitmask_dp(g.adj, dp, child, n, 0, 1);
+    //extracting the path
+    vector<int> path;
+    path.push_back(0);
+    int i = 0, mask = 1;
+    while(path.size() <= n)
+    {
+        int j = child[i][mask];
+        path.push_back(j);
+        mask = setBit(mask, j);
+        i = j;
+    }
+    return path;
 }
 
 int main()
@@ -138,21 +159,35 @@ int main()
     cout<<"Enter the number of testcases: ";
     int x;
     cin>>x;
+    vector<int> exact_lengths, approx_lengths;
     for(int i=0; i<x; i++)
     {
         int exact, approx;
         long double ratio;
         Graph g = Create_Random_Graph(20);
-        // for(int j=0; j<g.V; j++)
-        // {
-        //     for(int k=0; k<g.V; k++)
-        //         cout<<g.adj[j][k]<<" ";
-        //     cout<<endl;
-        // }
-        exact = Exact_TSP(g);
-        approx = Metric_Approximation_TSP(g);
-        cout<<"Testcase "<<i+1<<": "<<exact<<" "<<approx<<"\n";
-        ratio = (long double)approx/exact;
+//         for(int j=0; j<g.V; j++)
+//         {
+//             for(int k=0; k<g.V; k++)
+//                 cout<<g.adj[j][k]<<" ";
+//             cout<<endl;
+//         }
+        vector<int> exact_cycle = Exact_TSP(g);
+        vector<int> approx_cycle = Metric_Approximation_TSP(g);
+        exact = Calculate_Tour_Length(exact_cycle, g);
+        approx = Calculate_Tour_Length(approx_cycle, g);
+        exact_lengths.push_back(exact);
+        approx_lengths.push_back(approx);
+    //    cout<<"Exact Path: ";
+    //    for(int j : exact_cycle)
+    //        cout<<j<<" ";
+    //    cout<<"\nApprox Path: ";
+    //    for(int j : approx_cycle)
+    //        cout<<j<<" ";
+    //    cout<<"\nTestcase "<<i+1<<": "<<exact<<" "<<approx<<"\n"; 
+    }
+    for(int i=0; i<x; i++)
+    {
+        long double ratio = (approx_lengths[i]*1.0)/exact_lengths[i];
         cout<<"( "<<i+1<<", "<<ratio<<" )"<<endl;
     }
     return 0;
