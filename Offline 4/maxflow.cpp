@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<int> bfs(int n, int source, int sink, vector<vector<int> > &aug_mat)
+vector<int> bfs(int n, int source, int sink, vector<vector<int> > &aug_mat) // O(V+E)
 {
     vector<bool> visited(n, 0);
     vector<int> parent(n, -1);
@@ -49,14 +49,14 @@ int ford_fulkerson(int n, int source, int sink, vector<vector<int> > &aug_mat)
     // vector<vector<int> > temp = aug_mat; // to get tho flow along edges
     int mxFlow=0;
     vector<int> path = bfs(n, source, sink, aug_mat);
-    while (path.size()>1)
+    while (path.size()>1) //O(V)
     {
         int mincap=INT_MAX;
-        for(int i=0; i<path.size()-1; i++)
+        for(int i=0; i<path.size()-1; i++) //O(V)
             mincap = min(mincap, aug_mat[path[i]][path[i+1]]);
         // cerr<<"mincap = "<<mincap<<"\n\n";
         mxFlow += mincap;
-        for(int i=0; i<path.size()-1; i++)
+        for(int i=0; i<path.size()-1; i++) //O(V)
         {
             aug_mat[path[i]][path[i+1]] -= mincap;
             aug_mat[path[i+1]][path[i]] += mincap;

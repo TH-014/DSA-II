@@ -51,7 +51,15 @@ vector<vector<ll> > floyd_warshall(int n,const vector<vector<ll> > &cost)
         {
             for(int k=1; k<=n; k++)
             {
-                dist[j][k] = min(dist[j][k], dist[j][i]+dist[i][k]);
+                // for(int i=1; i<=n; i++)
+                // {
+                    // dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                    dist[j][k] = min(dist[j][k], dist[j][i]+dist[i][k]);
+                    // dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                    // dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                    // dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                    // dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                // }
             }
         }
     }
@@ -96,7 +104,7 @@ int main()
     print_mat(dist1, n);
 
     fclose(stdout);
-    freopen("fw.txt","w",stdout);
+    freopen("fw1.txt","w",stdout);
     
     // Floyd-Warshall
     vector<vector<ll> > dist2 = floyd_warshall(n, cost);

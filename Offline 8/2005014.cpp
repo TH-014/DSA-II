@@ -2,7 +2,7 @@
 #include "kruskal.h"
 using namespace std;
 
-class Graph{
+class Graph{ 
 public:
     int V;
     vector<vector<int> > adj;
